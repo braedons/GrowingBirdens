@@ -47,6 +47,7 @@ MonoBehaviour:
   - {fileID: 2685222205050032951, guid: 1f7d0eff0d7d1c1558a53abb61464ede, type: 3}
   - {fileID: 3088814545816366209, guid: 0bced93d1d7eb2d1a865a33a768fddcd, type: 3}
   - {fileID: 3441932675325772606, guid: 27a5c9f391fcd4eee99495772d708f52, type: 3}
+  - {fileID: 2685222205050032951, guid: 1f7d0eff0d7d1c1558a53abb61464ede, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   positions: []

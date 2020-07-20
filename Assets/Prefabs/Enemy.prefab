@@ -223,9 +223,9 @@ GameObject:
   - component: {fileID: 8387143918396133908}
   - component: {fileID: 1721222029}
   - component: {fileID: 1721222028}
-  - component: {fileID: 1721222030}
   - component: {fileID: 1721222032}
   - component: {fileID: 2033044321}
+  - component: {fileID: -8847942857940763935}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -294,7 +294,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 005977ec9a59cdba8ad4f04b7b8b378e, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.7075472, g: 0.060074776, b: 0.060074776, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -324,11 +324,14 @@ MonoBehaviour:
   descentCheck: {fileID: 70370561}
   jumpCheckStart: {fileID: 1873305141}
   jumpCheckEnd: {fileID: 594122782}
-  jumpForce: 165
+  jumpForce: 172
   layer:
     serializedVersion: 2
     m_Bits: 256
   speed: 30
+  stuckCheckRate: 0.25
+  stuckCheckProbability: 1
+  stuckCheckMargin: {x: 1, y: 1}
 --- !u!50 &1721222029
 Rigidbody2D:
   serializedVersion: 4
@@ -363,35 +366,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -6.04}
+  m_Offset: {x: -1.84, y: -5.96}
   serializedVersion: 2
-  m_Radius: 1.84
---- !u!61 &1721222030
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3441932675325772606}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 2.5333233}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 16, y: 16}
-    newSize: {x: 16, y: 16}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 16, y: 10.933353}
-  m_EdgeRadius: 0
+  m_Radius: 2.0260012
 --- !u!60 &1721222032
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -417,9 +394,19 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 8.158737, y: -3.0026283}
-      - {x: -7.948921, y: -3.0929222}
-      - {x: -1.6595001, y: -6.321636}
+    - - {x: -0.17892075, y: -6.042258}
+      - {x: 0.40266037, y: -2.3216834}
+      - {x: 2.0221024, y: -1.7137752}
+      - {x: 2.4586105, y: -0.25864315}
+      - {x: 4.60894, y: 0.25266838}
+      - {x: 7.1907425, y: 2.0651126}
+      - {x: 3.1117363, y: 5.8213105}
+      - {x: 1.3460197, y: 1.4871778}
+      - {x: -6.4342384, y: 1.7110538}
+      - {x: -7.1517487, y: -0.530581}
+      - {x: -5.756977, y: -2.1465983}
+      - {x: -3.8302956, y: -2.8204446}
+      - {x: -3.5385475, y: -5.695288}
 --- !u!114 &2033044321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -435,3 +422,22 @@ MonoBehaviour:
   targetTag: Player
   damageAmount: 1
   damageRate: 2
+--- !u!95 &-8847942857940763935
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3441932675325772606}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1a29dec5455eaaf5bbd5b091aba3862f, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

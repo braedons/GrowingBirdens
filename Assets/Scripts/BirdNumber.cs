@@ -4,7 +4,8 @@ using UnityEngine;
 using TMPro;
 
 public class BirdNumber : MonoBehaviour {
-    public TextMeshProUGUI text;
+    public TextMeshProUGUI birdNumber;
+    public TextMeshProUGUI nestsLeft;
 
     void Start() {
         
@@ -15,6 +16,10 @@ public class BirdNumber : MonoBehaviour {
     }
 
     public void SetBirdNumber(int num) {
-        text.SetText("<b>Controlling:</b> Bird " + num);
+        birdNumber.SetText("<b>Controlling:</b> Bird " + num);
+    }
+
+    public void SetNestsLeft(int num) {
+        nestsLeft.SetText("<b>Nests Left:</b>  " + num);
     }
 }

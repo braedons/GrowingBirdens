@@ -11,11 +11,18 @@ public class Vitality : MonoBehaviour
     public float maxSatiety = 10f;
     private float currSatiety;
     public float hungerRate = .1f;
+    private bool hungerFrozen = false;
 
     private VitalityBar healthBar;
     private VitalityBar hungerBar;
 
     private PlayerController controller;
+
+    // For flashing white when damaged
+    SpriteRenderer sr;
+    public Material matWhite;
+    Material matDefault;
+    private PlayerSound playerSound;
 
     public enum Stat
     {
@@ -32,13 +39,21 @@ public class Vitality : MonoBehaviour
         currSatiety = maxSatiety;
         hungerBar = GameObject.FindGameObjectWithTag("HungerBar").GetComponent<VitalityBar>();
 
-        controller = gameObject.GetComponent<PlayerController>();
+        controller = GetComponent<PlayerController>();
+
+        playerSound = GetComponent<PlayerSound>();
+    }
+
+    private void Start() {
+        sr = GetComponent<SpriteRenderer>();
+        matDefault = sr.material;
     }
 
     // Update is called once per frame
     void Update()
     {
-        ChangeVitality(Stat.Satiety, -(hungerRate * Time.deltaTime));
+        if (!hungerFrozen)
+            ChangeVitality(Stat.Satiety, -(hungerRate * Time.deltaTime));
     }
 
     public void ChangeVitality(Stat targetStat, float change)
@@ -48,12 +63,21 @@ public class Vitality : MonoBehaviour
             // Check isActiveAndEnabled because an enabled controller indicates a current player (should be affecting the HUD)
             case Stat.Health:
                 currHealth = CheckVitality(currHealth + change, maxHealth);
-                if (controller.isActiveAndEnabled) healthBar.SetVitality(currHealth);
+                if (controller.IsActive()) healthBar.SetVitality(currHealth);
                 CheckVitality(currHealth, maxHealth);
+
+                if (change < 0) {
+                    // Damage Sound
+                    playerSound.Hurt();
+
+                    // Flash White
+                    sr.material = matWhite;
+                    Invoke("ResetMaterial", .1f);
+                }
                 break;
             case Stat.Satiety:
                 currSatiety = CheckVitality(currSatiety + change, maxSatiety);
-                if (controller.isActiveAndEnabled) hungerBar.SetVitality(currSatiety);
+                if (controller.IsActive()) hungerBar.SetVitality(currSatiety);
                 CheckVitality(currSatiety, maxSatiety);
                 break;
         }
@@ -102,6 +126,15 @@ public class Vitality : MonoBehaviour
     public void ResetVitality() {
         currHealth = maxHealth;
         currSatiety = maxSatiety;
-        Debug.Log("h" + currHealth + " s" + currSatiety);
+        
+        hungerFrozen = false;
+    }
+
+    private void ResetMaterial() {
+        sr.material = matDefault;
+    }
+
+    public void FreezeHunger(bool frozen) {
+        hungerFrozen = frozen;
     }
 }

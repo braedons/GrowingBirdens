@@ -1,0 +1,44 @@
+Must Do:
+
+Nice To Haves:
+21. Score system
+31. Minimap
+33. Other enemies
+23. Cursor size
+15. Character select
+4. game over animation
+27. Level x popup
+26. Nested message popup
+35. Animated background
+36. Eat, nest sound, improve footsteps
+
+
+--------------------------------------------------------------------------------
+
+Maybe Done:
+10. UI scaling
+12. Tweak values (jump height, AI movement, food healed, AI damage, hunger drain)
+24. Make AI jump over each other
+
+Done:
+1. Separate hunger bars
+3. Set up player spawns
+16. Disable playercontroller at pause
+2. Finish LevelManager script (fix destroy children, handle -1,-1 case, load depending on dimensions)
+6. Cursor sizing
+18. Damage player while in contact with enemy
+11. Zoom out camera
+13. Smooth camera follow (smooth transition between)
+19. Delete nest on restart
+5. Music
+14. Distinction between players, between players and enemies
+17. Fix 3/4 jumps
+20. Decrease circle collider on player
+8. Game over (out of life, hunger, falling)
+28. Game over when player not selected
+2b. Reset inventory and stats
+30. nested animation
+32. Item pickups float and spin
+9. Damage sound
+7. Title screen (help)
+34. Pickup sound

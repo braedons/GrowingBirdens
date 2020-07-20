@@ -35,6 +35,11 @@ public class PlayerController : MonoBehaviour
 
     private LevelManager levelManager;
 
+    public PlayerSound playerSound;
+
+    private bool active = true;
+    private bool isNested = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -53,7 +58,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update() {
         // Horizontal Movement
-        horizontalComponent = Input.GetAxisRaw("Horizontal");
+        if (active)
+            horizontalComponent = Input.GetAxisRaw("Horizontal");
         animator.SetFloat("Speed_Abs", Mathf.Abs(horizontalComponent));
         if ((horizontalComponent > 0 && !facingRight) || (horizontalComponent < 0 && facingRight))
             Flip();
@@ -66,7 +72,7 @@ public class PlayerController : MonoBehaviour
             jumpsLeft = possibleJumps;
         
         jumpComponent = rb.velocity.y;
-        if (Input.GetKeyDown("space"))
+        if (Input.GetKeyDown("space") && active)
         {
             if (isGrounded)
             {
@@ -75,18 +81,21 @@ public class PlayerController : MonoBehaviour
 
                 animator.SetBool("Grounded", false);
                 animator.SetTrigger("Jump");
+                playerSound.Flap();
             }
             else if (jumpsLeft > 0)
             {            
                 jumpComponent = jumpForce * arialJumpFraction;
                 animator.SetTrigger("Jump");
+                playerSound.Flap();
             }
 
             jumpsLeft--;
         }
+        rb.velocity = new Vector2(horizontalComponent * speed, jumpComponent);
 
         // Build Nest
-        if (Input.GetKeyDown("e")) {
+        if (Input.GetKeyDown("e") && active) {
             if (crafting.BuildItem(inv, "Nest")) {
                 GameObject clone = Instantiate(nestPrefab, Vector3.zero, Quaternion.identity) as GameObject;
                 clone.transform.position = gameObject.transform.position;
@@ -94,19 +103,15 @@ public class PlayerController : MonoBehaviour
         }
 
         // Lay Egg
-        if (Input.GetKeyDown("s")) {
+        if (Input.GetKeyDown("s") && active) {
             if (vit.GetVitality(Vitality.Stat.Satiety) > vit.GetMaxVitality(Vitality.Stat.Satiety) * .75) {
                 if (triggerTouch.GetTargetsTouched() > 0) {
                     playerSwitch.NestPlayer(gameObject);
                 }
             }
         }
-    }
 
-    private void FixedUpdate()
-    {
-        rb.velocity = new Vector2(horizontalComponent * speed, jumpComponent);
-
+        // Check fall offscreen
         if (transform.position.y < levelManager.GetBottomOfMap())
             GameOver();
     }
@@ -118,14 +123,38 @@ public class PlayerController : MonoBehaviour
     }
 
     public void ResetPlayer() {
-        Debug.Log("reset");
-        // Reset inventory, vitality
+        active = true;
+        isNested = false;
+        
+        // Reset inventory, vitality, animator
         inv.ResetInventory();
         vit.ResetVitality();
+        animator.SetBool("Nested", false);
     }
 
     public void GameOver() {
-        gameObject.SetActive(false);
-        levelManager.GameOver();
+        // animator.SetTrigger("Die");
+        SetActive(false);
+        levelManager.GameOver(gameObject);
+    }
+    
+    public bool IsWalking() {
+        return isGrounded && Mathf.Abs(rb.velocity.x) > 0f;
+    }
+
+    public void SetActive(bool active) {
+        this.active = active;
+    }
+
+    public bool IsActive() {
+        return active;
+    }
+
+    public void SetNested(bool nested) {
+        isNested = nested;
+    }
+
+    public bool IsNested() {
+        return isNested;
     }
 }

@@ -22,6 +22,8 @@ public class LevelManager : MonoBehaviour
     private bool gameOver = false;
     public GameObject restartMenu;
 
+    private AudioManager audioManager;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -30,9 +32,12 @@ public class LevelManager : MonoBehaviour
         currHeight = startingHeight;
         bottomOfMap = -templateHeight * 2;
 
-        GameObject.FindGameObjectWithTag("Cursor").GetComponent<SpriteRenderer>().enabled = false;
+        // GameObject.FindGameObjectWithTag("Cursor").GetComponent<SpriteRenderer>().enabled = false;
+        Cursor.visible = false;
 
         LoadLevel(startingWidth, startingHeight);
+
+        audioManager = GameObject.FindGameObjectWithTag("AudioManager").GetComponent<AudioManager>();
     }
 
     public void LoadLevel(int width, int height) {
@@ -76,18 +81,33 @@ public class LevelManager : MonoBehaviour
 
     public void GameOver() {
         if (!gameOver) {
+            audioManager.Play("GameOver");
+            
             gameOver = true;
-            Debug.Log("Game over");
             restartMenu.SetActive(true);
+            Cursor.visible = true;
+        }
+    }
+
+    public void GameOver(GameObject player) {
+        if (!gameOver) {
+            playerSwitch.SetActivePlayer(player);
+            playerSwitch.SetSwitchActive(false);
+            Time.timeScale = 0f;
+
+            GameOver();
         }
     }
 
     public void Restart() {
+        Time.timeScale = 1f;
+        Cursor.visible = true;
         restartMenu.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void LoadMenu() {
+        Cursor.visible = true;
         SceneManager.LoadScene(0);
     }
 

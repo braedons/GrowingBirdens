@@ -22,9 +22,7 @@ public class PlayerSwitch : MonoBehaviour {
     private HashSet<GameObject> nestedPlayers = new HashSet<GameObject>();
     public LevelManager levelManager;
 
-    private void Awake() {
-        
-    }
+    private bool switchActive = true;
 
     void Start() {
         // Create players
@@ -40,7 +38,7 @@ public class PlayerSwitch : MonoBehaviour {
             DisablePlayer(i);
         }
 
-        camFollow = Camera.main.GetComponent<CameraFollow>();
+        camFollow = Camera.main.transform.parent.GetComponent<CameraFollow>();
         camFollow.UpdateTarget(players[currPlayer]);
 
         healthBar = GameObject.FindGameObjectWithTag("HealthBar").GetComponent<VitalityBar>();
@@ -52,7 +50,7 @@ public class PlayerSwitch : MonoBehaviour {
     }
 
     void Update() {
-        if (Input.GetKeyDown("q") && !isPaused) {
+        if (Input.GetKeyDown("q") && !isPaused && switchActive) {
             // Switch control
             DisablePlayer(currPlayer);
             EnablePlayer(NextPlayer());
@@ -100,50 +98,78 @@ public class PlayerSwitch : MonoBehaviour {
 
     public void Pause() {
         isPaused = true;
-        players[currPlayer].GetComponent<PlayerController>().enabled = false;
+        players[currPlayer].GetComponent<PlayerController>().SetActive(false);
     }
 
     public void Unpause() {
         isPaused = false;
-        players[currPlayer].GetComponent<PlayerController>().enabled = true;
+        players[currPlayer].GetComponent<PlayerController>().SetActive(true);
     }
 
     public void NestPlayer(GameObject player) {
         nestedPlayers.Add(player);
+        birdNumber.SetNestsLeft(players.Count - nestedPlayers.Count);
+
+        // Set player inactive, freeze hunger, play animation
+        PlayerController pc = player.GetComponent<PlayerController>();
+        pc.SetActive(false);
+        pc.SetNested(true);
+        player.GetComponent<Vitality>().FreezeHunger(true);
+        player.GetComponent<Animator>().SetBool("Nested", true);
 
         // Check if all are nested
         if (nestedPlayers.Count == players.Count) {
-            nestedPlayers = new HashSet<GameObject>();
-
-            foreach (GameObject curr in players) {
-                Debug.Log("restting: " + curr);
-                curr.GetComponent<PlayerController>().ResetPlayer();
-            }
-
-            CreatePlayer();
-
-            // Switch control
-            DisablePlayer(currPlayer);
-            EnablePlayer(0);
-            currPlayer = 0;
-
-            // Reset UI
-            SwitchUI(players[0]);
-
-            // Update camera
-            camFollow.UpdateTarget(players[currPlayer]);
-
-            levelManager.LoadLevel(-1, -1);
+            NextLevel();
         }
     }
 
+    void NextLevel() {
+        nestedPlayers = new HashSet<GameObject>();
+
+        foreach (GameObject curr in players) {
+            curr.GetComponent<PlayerController>().ResetPlayer();
+        }
+
+        CreatePlayer();
+
+        // Switch control
+        DisablePlayer(currPlayer);
+        EnablePlayer(0);
+        currPlayer = 0;
+
+        // Reset UI
+        SwitchUI(players[0]);
+        birdNumber.SetNestsLeft(players.Count);
+
+        // Update camera
+        camFollow.UpdateTarget(players[currPlayer]);
+
+        levelManager.LoadLevel(-1, -1);
+    }
+
     private void EnablePlayer(int player) {
-        players[player].GetComponent<PlayerController>().enabled = true;
-        players[player].GetComponent<Rigidbody2D>().mass = 1;
+        if (!players[player].GetComponent<PlayerController>().IsNested()) {
+            players[player].GetComponent<PlayerController>().SetActive(true);
+            players[player].GetComponent<Rigidbody2D>().mass = 1;
+        }
     }
 
     private void DisablePlayer(int player) {
-        players[player].GetComponent<PlayerController>().enabled = false;
+        players[player].GetComponent<PlayerController>().SetActive(false);
         players[player].GetComponent<Rigidbody2D>().mass = 100;
+    }
+
+    public void SetActivePlayer(GameObject player) {
+        for (int i = 0; i < players.Count; i++) {
+            if (player == players[i]) {
+                SwitchUI(players[i]);
+                camFollow.UpdateTarget(players[i]);
+                break;
+            }
+        }
+    }
+
+    public void SetSwitchActive(bool active) {
+        switchActive = active;
     }
 }

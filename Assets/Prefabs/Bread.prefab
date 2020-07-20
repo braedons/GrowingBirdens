@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3088814545816366211}
   - component: {fileID: 3088814545816366210}
   - component: {fileID: 3088814545816366221}
+  - component: {fileID: 2319262481138183808}
   m_Layer: 0
   m_Name: Bread
   m_TagString: Untagged
@@ -125,3 +126,22 @@ MonoBehaviour:
   vitalityStat: 1
   vitalityStatChange: 2
   addToInventory: 1
+--- !u!95 &2319262481138183808
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3088814545816366209}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2de65495d058f193ca59a617c758b893, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0

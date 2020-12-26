@@ -41,6 +41,8 @@ public class LevelManager : MonoBehaviour
     }
 
     public void LoadLevel(int width, int height) {
+        Time.timeScale = 1f;
+
         // If inputs are -1, just increment the size
         if (width == -1)
             width = ++currWidth;
@@ -86,6 +88,8 @@ public class LevelManager : MonoBehaviour
             gameOver = true;
             restartMenu.SetActive(true);
             Cursor.visible = true;
+            
+            Time.timeScale = 0f;
         }
     }
 
@@ -93,7 +97,6 @@ public class LevelManager : MonoBehaviour
         if (!gameOver) {
             playerSwitch.SetActivePlayer(player);
             playerSwitch.SetSwitchActive(false);
-            Time.timeScale = 0f;
 
             GameOver();
         }
@@ -109,6 +112,7 @@ public class LevelManager : MonoBehaviour
     public void LoadMenu() {
         Cursor.visible = true;
         SceneManager.LoadScene(0);
+        Time.timeScale = 1f;
     }
 
     public float GetBottomOfMap() {
